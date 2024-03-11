@@ -9,13 +9,44 @@ import SwiftUI
 import MapKit
 
 struct ViewA: View {
-    // Map Properties
     var body: some View {
         if #available(iOS 17.0, *) {
+            // Map Properties
             @State var cameraPosition: MapCameraPosition = .region(.myRegion)
+            @Namespace var locationSpace
             Map(position: $cameraPosition) {
                 //Map Annotations
-                Marker("Apple Park", coordinate: .myLocation)
+//                Marker("ADA", systemImage: "applelogo", coordinate: .myLocation)
+                Annotation("ADA", coordinate: .myLocation) {
+                    ZStack {
+                        Image(systemName: "applelogo")
+                            .font(.title3)
+                        
+                        Image(systemName: "square")
+                            .font(.largeTitle)
+                    }
+                }
+                .annotationTitles(.hidden)
+                
+                // To Show User Current Location
+                UserAnnotation()
+                
+            }
+//            .overlay(alignment: .bottomTrailing) {
+//                VStack(spacing: 15) {
+//                    MapCompass(scope: locationSpace)
+//                    MapPitchSlider(scope: locationSpace)
+//                    MapUserLocationButton(scope: locationSpace)
+//                }
+//                .buttonBorderShape(.circle)
+//                .padding()
+//            }
+//            .mapScope(locationSpace)
+            .mapControls {
+                //Compass, 3D Maps, User Location etc.
+                MapCompass()
+                MapUserLocationButton()
+                MapPitchSlider()
             }
         } else {
             // Fallback on earlier versions
